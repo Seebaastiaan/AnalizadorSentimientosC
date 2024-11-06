@@ -1,3 +1,5 @@
+// Autores Jara Hernandez Carlos Sebastian y Mateo Medina Alexis Antonio
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -55,16 +57,16 @@ int main()
     }
 
     char amor[50][20] = {
-        "cariño", "pasión", "ternura", "compañerismo", "afecto",
-        "devocion", "amor", "atraccion", "romance", "confianza",
-        "deseo", "admiracion", "cuidado", "aprecio", "dedicacion",
-        "lealtad", "gratitud", "fidelidad", "encanto", "ilusion",
-        "inspiracion", "entrega", "apego", "veneracion", "fascinacion",
-        "conexion", "almas", "amistad", "compromiso", "ternura",
-        "devocion", "delirio", "emoción", "sincero", "afecto",
-        "serenidad", "cautivar", "respeto", "adulacion", "solidaridad",
-        "misterio", "impulso", "unión", "belleza", "voluntad"};
-
+        "cariño", "pasión", "ternura", "compañía", "afecto",
+        "devoción", "amor", "atracción", "romance", "confianza",
+        "deseo", "admiración", "cuidado", "aprecio", "dedicación",
+        "aprecio", "gratitud", "fidelidad", "encanto", "ilusión",
+        "inspiración", "entrega", "apego", "veneración", "fascinación",
+        "conexión", "almas", "cordialidad", "compromiso", "ternura",
+        "pasión", "devoción", "delirio", "emoción", "sincero",
+        "serenidad", "cautivar", "respeto", "cariño", "consideración",
+        "misterio", "impulso", "afecto", "belleza", "voluntad",
+        "fuerza", "atracción", "fascinación", "constancia", "dedicación"};
     int tamano_amor = sizeof(amor) / sizeof(amor[0]);
     int puntosAmor = 0;
 
@@ -97,15 +99,16 @@ int main()
     int puntosTristeza = 0;
 
     char amistad[50][20] = {
-        "lealtad", "compañerismo", "confianza", "solidaridad", "apoyo",
+        "lealtad", "compañerismo", "colaboración", "solidaridad", "apoyo",
         "fraternidad", "amistad", "hermandad", "altruismo", "comunidad",
-        "camaraderia", "simpatia", "respeto", "unidad", "cooperacion",
-        "escucha", "consejo", "empatia", "aprecio", "alianza",
-        "bondad", "entendimiento", "conexion", "presente", "mutuo",
-        "valor", "afecto", "acompañamiento", "hermandad", "compromiso",
-        "integridad", "fidelidad", "honestidad", "compasión", "complejidad",
-        "cercania", "solidaridad", "abrazar", "apoyo", "conexión",
-        "incondicional", "hermano", "consuelo", "refugio", "compañero"};
+        "camaradería", "simpatía", "unidad", "cooperación", "escucha",
+        "consejo", "empatía", "valía", "alianza", "bondad",
+        "entendimiento", "acuerdo", "presencia", "mutualidad", "valor",
+        "integridad", "acompañamiento", "sinceridad", "ayuda", "asociación",
+        "hermandad", "integridad", "generosidad", "compasión", "complejidad",
+        "cercanía", "alianza", "abrazar", "Amistad", "asistencia",
+        "incondicional", "hermano", "consuelo", "refugio", "compañero",
+        "alianza", "simpatía", "aprecio", "complicidad", "sinceridad"};
 
     int tamano_amistad = sizeof(amistad) / sizeof(amistad[0]);
     int puntosAmistad = 0;
