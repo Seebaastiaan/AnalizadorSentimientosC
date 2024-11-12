@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include <ctype.h>
 
 void limpiar_palabra(char *palabra)
@@ -9,7 +10,6 @@ void limpiar_palabra(char *palabra)
     int i = 0, j = 0;
     while (palabra[i] != '\0')
     {
-
         if (isalpha(palabra[i]) || palabra[i] == '-')
         {
             palabra[j++] = palabra[i];
@@ -19,26 +19,41 @@ void limpiar_palabra(char *palabra)
     palabra[j] = '\0';
 }
 
+void minusculas(char *cadena)
+{
+    for (int i = 0; cadena[i] != '\0'; i++)
+    {
+        cadena[i] = tolower((unsigned char)cadena[i]);
+    }
+}
+
 int main()
 {
     char carta[10000];
-    int i = 0;
     char *puntero;
-    char PalabrasGuardadas[10000][20];
-    int j = 0;
+    char **PalabrasGuardadas = NULL;
+    int i = 0, j = 0, maxPalabras = 1000;
     FILE *apu_archivo;
+
+    PalabrasGuardadas = (char **)malloc(maxPalabras * sizeof(char *));
+    if (PalabrasGuardadas == NULL)
+    {
+        printf("Error al asignar memoria para las palabras.\n");
+        return 1;
+    }
 
     apu_archivo = fopen("carta.txt", "r");
     if (apu_archivo != NULL)
     {
         int c;
-
-        while ((c = fgetc(apu_archivo)) != EOF && i < sizeof(carta))
+        while ((c = fgetc(apu_archivo)) != EOF && i < sizeof(carta) - 1)
         {
-            carta[i++] = (char)c;
+            carta[i++] = c;
         }
         carta[i] = '\0';
         fclose(apu_archivo);
+
+        minusculas(carta);
     }
     else
     {
@@ -46,156 +61,188 @@ int main()
         return 1;
     }
 
-    puntero = strtok(carta, " .,-");
+    puntero = strtok(carta, " .,-\n");
     i = 0;
-    while (puntero != NULL && i < 10000)
+    while (puntero != NULL)
     {
+        if (i >= maxPalabras)
+        {
+            maxPalabras *= 2;
+            PalabrasGuardadas = (char **)realloc(PalabrasGuardadas, maxPalabras * sizeof(char *));
+            if (PalabrasGuardadas == NULL)
+            {
+                printf("Error al reasignar memoria para las palabras.\n");
+                return 1;
+            }
+        }
+
+        PalabrasGuardadas[i] = (char *)malloc((strlen(puntero) + 1) * sizeof(char));
+        if (PalabrasGuardadas[i] == NULL)
+        {
+            printf("Error al asignar memoria para la palabra.\n");
+            return 1;
+        }
+
         limpiar_palabra(puntero);
-        strcpy(PalabrasGuardadas[i], puntero);
-        puntero = strtok(NULL, " .,-");
-        i++;
+        strcpy(PalabrasGuardadas[i++], puntero);
+        puntero = strtok(NULL, " .,-\n");
     }
 
-    char amor[50][20] = {
-        "cariño", "pasión", "ternura", "compañía", "afecto",
-        "devoción", "amor", "atracción", "romance", "confianza",
-        "deseo", "admiración", "cuidado", "aprecio", "dedicación",
-        "aprecio", "gratitud", "fidelidad", "encanto", "ilusión",
-        "inspiración", "entrega", "apego", "veneración", "fascinación",
-        "conexión", "almas", "cordialidad", "compromiso", "ternura",
-        "pasión", "devoción", "delirio", "emoción", "sincero",
-        "serenidad", "cautivar", "respeto", "cariño", "consideración",
-        "misterio", "impulso", "afecto", "belleza", "voluntad",
-        "fuerza", "atracción", "fascinación", "constancia", "dedicación"};
-    int tamano_amor = sizeof(amor) / sizeof(amor[0]);
-    int puntosAmor = 0;
+    char *amor[] = {"amo", "afecto", "pasion", "devocion", "ternura", "romance", "adoracion", "aprecio", "cuidado", "encanto"};
+    int tamano_amor = 10, puntosAmor = 0;
 
-    char asco[50][20] = {
-        "repugnancia", "desagrado", "aversion", "rechazo", "asco",
-        "antipatia", "odio", "abominacion", "molestia", "irritacion",
-        "desprecio", "hostilidad", "repulsion", "horror", "repelencia",
-        "indiferencia", "desgusto", "disgusto", "reproche", "resistencia",
-        "antipatico", "alejamiento", "distanciamiento", "critica", "rechazar",
-        "odiar", "sufrimiento", "desaprobacion", "negativa", "enfermedad",
-        "contaminacion", "detestar", "insolencia", "abominable", "sucio",
-        "desorden", "desgano", "molesto", "sordido", "repulsivo",
-        "desprecio", "desden", "desprecio", "desgarrar", "atroz"};
+    char *asco[] = {"repulsion", "desagrado", "aversion", "nausea", "rechazo", "repugnancia", "asco", "horror", "desden", "incomodidad"};
+    int tamano_asco = 10, puntosAsco = 0;
 
-    int tamano_asco = sizeof(asco) / sizeof(asco[0]);
-    int puntosAsco = 0;
+    char *tristeza[] = {"pena", "melancolia", "soledad", "desconsuelo", "desesperacion", "angustia", "afliccion", "lagrimas", "pesar", "lamento"};
+    int tamano_tristeza = 10, puntosTristeza = 0;
 
-    char tristeza[50][20] = {
-        "soledad", "desesperanza", "melancolia", "dolor", "lagrimas",
-        "pena", "angustia", "depresion", "tristeza", "desconsuelo",
-        "desilusion", "frustracion", "amargura", "desdicha", "pesar",
-        "abatimiento", "afliccion", "sufrimiento", "lamento", "nostalgia",
-        "vacio", "silencio", "decepcion", "quebranto", "injusticia",
-        "desgaste", "duda", "perdida", "anhelo", "doloroso",
-        "melancolico", "desesperacion", "triste", "desgarrador", "fatiga",
-        "congoja", "desolacion", "turbacion", "sombra", "ausencia",
-        "sofrimiento", "apagado", "frustrante", "desolado", "desanimo"};
+    char *amistad[] = {"companerismo", "confianza", "lealtad", "apoyo", "solidaridad", "camaraderia", "comprension", "amistad", "union", "generosidad"};
+    int tamano_amistad = 10, puntosAmistad = 0;
 
-    int tamano_tristeza = sizeof(tristeza) / sizeof(tristeza[0]);
-    int puntosTristeza = 0;
+    char *felicidad[] = {"alegre", "euforia", "satisfaccion", "gozo", "entusiasmo", "regocijo", "contento", "optimismo", "plenitud", "dicha"};
+    int tamano_felicidad = 10, puntosFelicidad = 0;
 
-    char amistad[50][20] = {
-        "lealtad", "compañerismo", "colaboración", "solidaridad", "apoyo",
-        "fraternidad", "amistad", "hermandad", "altruismo", "comunidad",
-        "camaradería", "simpatía", "unidad", "cooperación", "escucha",
-        "consejo", "empatía", "valía", "alianza", "bondad",
-        "entendimiento", "acuerdo", "presencia", "mutualidad", "valor",
-        "integridad", "acompañamiento", "sinceridad", "ayuda", "asociación",
-        "hermandad", "integridad", "generosidad", "compasión", "complejidad",
-        "cercanía", "alianza", "abrazar", "Amistad", "asistencia",
-        "incondicional", "hermano", "consuelo", "refugio", "compañero",
-        "alianza", "simpatía", "aprecio", "complicidad", "sinceridad"};
+    int negacion = 0;
+    int rango_negacion = 5;
 
-    int tamano_amistad = sizeof(amistad) / sizeof(amistad[0]);
-    int puntosAmistad = 0;
-
-    char felicidad[50][20] = {
-        "alegria", "satisfaccion", "placer", "entusiasmo", "contento",
-        "felicidad", "jubilo", "gozo", "gratitud", "dicha",
-        "optimismo", "euforia", "bienestar", "sosiego", "serenidad",
-        "sonrisa", "sueño", "celebracion", "vivir", "inspiracion",
-        "sonreir", "logro", "triunfo", "victoria", "esperanza",
-        "luz", "brillo", "realizacion", "bendicion", "calor",
-        "vivir", "gratificante", "éxito", "luminosa", "alegría",
-        "felices", "orgullo", "equilibrio", "regocijo", "deslumbrante",
-        "esperanza", "paz", "aprecio", "tranquilidad", "superación"};
-
-    int tamano_felicidad = sizeof(felicidad) / sizeof(felicidad[0]);
-    int puntosFelicidad = 0;
-
-    // arreglo amor
     for (j = 0; j < i; j++)
     {
+
+        if (strcmp(PalabrasGuardadas[j], "no") == 0)
+        {
+            negacion = 1;
+            continue;
+        }
+
+        if (negacion)
+        {
+            int negada = 0;
+
+            for (int k = 1; k <= rango_negacion; k++)
+            {
+
+                for (int l = 0; l < tamano_amor; l++)
+                {
+                    if (strcmp(PalabrasGuardadas[j + k], amor[l]) == 0)
+                    {
+                        printf("Palabra negada: %s (no se suma a Amor)\n", PalabrasGuardadas[j + k]);
+                        negada = 1;
+                        break;
+                    }
+                }
+                for (int l = 0; l < tamano_asco; l++)
+                {
+                    if (strcmp(PalabrasGuardadas[j + k], asco[l]) == 0)
+                    {
+                        printf("Palabra negada: %s (no se suma a Asco)\n", PalabrasGuardadas[j + k]);
+                        negada = 1;
+                        break;
+                    }
+                }
+                for (int l = 0; l < tamano_tristeza; l++)
+                {
+                    if (strcmp(PalabrasGuardadas[j + k], tristeza[l]) == 0)
+                    {
+                        printf("Palabra negada: %s (no se suma a Tristeza)\n", PalabrasGuardadas[j + k]);
+                        negada = 1;
+                        break;
+                    }
+                }
+                for (int l = 0; l < tamano_amistad; l++)
+                {
+                    if (strcmp(PalabrasGuardadas[j + k], amistad[l]) == 0)
+                    {
+                        printf("Palabra negada: %s (no se suma a Amistad)\n", PalabrasGuardadas[j + k]);
+                        negada = 1;
+                        break;
+                    }
+                }
+                for (int l = 0; l < tamano_felicidad; l++)
+                {
+                    if (strcmp(PalabrasGuardadas[j + k], felicidad[l]) == 0)
+                    {
+                        printf("Palabra negada: %s (no se suma a Felicidad)\n", PalabrasGuardadas[j + k]);
+                        negada = 1;
+                        break;
+                    }
+                }
+
+                if (negada)
+                    break;
+            }
+
+            if (!negada)
+                negacion = 0;
+
+            continue;
+        }
+
         for (int k = 0; k < tamano_amor; k++)
         {
             if (strcmp(PalabrasGuardadas[j], amor[k]) == 0)
             {
-                printf("Palabras que coinciden en amor: %s\n", PalabrasGuardadas[j]);
-                puntosAmor += 1;
+                puntosAmor++;
+                break;
             }
         }
-    }
-    printf("Puntos amor: %d\n", puntosAmor);
 
-    // arreglo asco
-    for (j = 0; j < i; j++)
-    {
         for (int k = 0; k < tamano_asco; k++)
         {
             if (strcmp(PalabrasGuardadas[j], asco[k]) == 0)
             {
-                printf("Palabras que coinciden en Asco: %s\n", PalabrasGuardadas[j]);
-                puntosAsco += 1;
+                puntosAsco++;
+                break;
             }
         }
-    }
-    printf("Puntos Asco: %d\n", puntosAsco);
 
-    // Arreglo tristeza
-    for (j = 0; j < i; j++)
-    {
         for (int k = 0; k < tamano_tristeza; k++)
         {
             if (strcmp(PalabrasGuardadas[j], tristeza[k]) == 0)
             {
-                printf("Palabras que coinciden en tristeza: %s\n", PalabrasGuardadas[j]);
-                puntosTristeza += 1;
+                puntosTristeza++;
+                break;
             }
         }
-    }
-    printf("Puntos Tristeza: %d\n", puntosTristeza);
 
-    // arreglo amistad
-    for (j = 0; j < i; j++)
-    {
         for (int k = 0; k < tamano_amistad; k++)
         {
             if (strcmp(PalabrasGuardadas[j], amistad[k]) == 0)
             {
-                printf("Palabras que coinciden en amistad: %s\n", PalabrasGuardadas[j]);
-                puntosAmistad += 1;
+                puntosAmistad++;
+                break;
             }
         }
-    }
-    printf("Puntos Amistad: %d\n", puntosAmistad);
 
-    // Arreglo felicidad
-    for (j = 0; j < i; j++)
-    {
         for (int k = 0; k < tamano_felicidad; k++)
         {
             if (strcmp(PalabrasGuardadas[j], felicidad[k]) == 0)
             {
-                printf("Palabras que coinciden en felicidad: %s\n", PalabrasGuardadas[j]);
-                puntosFelicidad += 1;
+                puntosFelicidad++;
+                break;
             }
         }
     }
-    printf("Puntos felicidad: %d\n", puntosFelicidad);
+
+    int PuntosTotales = puntosAmor + puntosAsco + puntosTristeza + puntosAmistad + puntosFelicidad;
+    if (PuntosTotales > 0)
+    {
+        printf("Porcentaje de Amor en la carta: %.2f %%\n", (puntosAmor * 100.0) / PuntosTotales);
+        printf("Porcentaje de Asco en la carta: %.2f %%\n", (puntosAsco * 100.0) / PuntosTotales);
+        printf("Porcentaje de Tristeza en la carta: %.2f %%\n", (puntosTristeza * 100.0) / PuntosTotales);
+        printf("Porcentaje de Amistad en la carta: %.2f %%\n", (puntosAmistad * 100.0) / PuntosTotales);
+        printf("Porcentaje de Felicidad en la carta: %.2f %%\n", (puntosFelicidad * 100.0) / PuntosTotales);
+    }
+    else
+    {
+        printf("No se encontraron palabras relevantes en la carta.\n");
+    }
+
+    for (int k = 0; k < i; k++)
+    {
+        free(PalabrasGuardadas[k]);
+    }
+    free(PalabrasGuardadas);
 
     return 0;
 }
