@@ -46,7 +46,7 @@ int main()
     if (apu_archivo != NULL)
     {
         int c;
-        while ((c = fgetc(apu_archivo)) != EOF && i < sizeof(carta) - 1)
+        while ((c = fgetc(apu_archivo)) != EOF && i < sizeof(carta))
         {
             carta[i++] = c;
         }
@@ -76,7 +76,7 @@ int main()
             }
         }
 
-        PalabrasGuardadas[i] = (char *)malloc((strlen(puntero) + 1) * sizeof(char));
+        PalabrasGuardadas[i] = (char *)malloc((strlen(puntero)) * sizeof(char));
         if (PalabrasGuardadas[i] == NULL)
         {
             printf("Error al asignar memoria para la palabra.\n");
@@ -88,19 +88,19 @@ int main()
         puntero = strtok(NULL, " .,-\n");
     }
 
-    char *amor[] = {"amo", "afecto", "pasion", "devocion", "ternura", "romance", "adoracion", "aprecio", "cuidado", "encanto"};
+    char *amor[] = {"amo", "afecto", "pasion", "amor", "ternura", "romance", "adoracion", "aprecio", "cuidado", "encanto"};
     int tamano_amor = 10, puntosAmor = 0;
 
-    char *asco[] = {"repulsion", "desagrado", "aversion", "nausea", "rechazo", "repugnancia", "asco", "horror", "desden", "incomodidad"};
+    char *asco[] = {"repulsion", "desagrada", "aversion", "nausea", "rechazo", "repugnancia", "asco", "horror", "desagrado", "incomodidad"};
     int tamano_asco = 10, puntosAsco = 0;
 
-    char *tristeza[] = {"pena", "melancolia", "soledad", "desconsuelo", "desesperacion", "angustia", "afliccion", "lagrimas", "pesar", "lamento"};
+    char *tristeza[] = {"pena", "triste", "soledad", "desconsuela", "desespera", "angustia", "afliccion", "lagrimas", "pesar", "lamento"};
     int tamano_tristeza = 10, puntosTristeza = 0;
 
-    char *amistad[] = {"companerismo", "confianza", "lealtad", "apoyo", "solidaridad", "camaraderia", "comprension", "amistad", "union", "generosidad"};
+    char *amistad[] = {"amigos", "amigas", "lealtad", "apoyo", "solidaridad", "camaraderia", "comprendo", "amistad", "union", "generosidad"};
     int tamano_amistad = 10, puntosAmistad = 0;
 
-    char *felicidad[] = {"alegre", "euforia", "satisfaccion", "gozo", "entusiasmo", "regocijo", "contento", "optimismo", "plenitud", "dicha"};
+    char *felicidad[] = {"alegre", "satisfaccion", "satisface", "gozo", "entusiasmo", "regocijo", "contento", "optimismo", "plenitud", "dicha"};
     int tamano_felicidad = 10, puntosFelicidad = 0;
 
     int negacion = 0;
