@@ -1,75 +1,83 @@
 #include <stdio.h>
-#include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
+#include <string.h>
 
-int CargarCSV(char **arreglo, const char *NombreArchivo)
+int CargarCSV(char ***arreglo, const char *NombreArchivo)
 {
     FILE *apu_archivo_CSV;
     char PalabrasNOPUNTERO[10000];
     char *puntero;
     int i = 0;
-    **arreglo = (char **)malloc(1000 * sizeof(char *));
     int maxPalabras = 1000;
 
-    if (arreglo == NULL)
+    *arreglo = (char **)malloc(maxPalabras * sizeof(char *));
+    if (*arreglo == NULL)
     {
         printf("Error al asignar memoria inicial para el array de palabras.\n");
         return 1;
     }
 
     apu_archivo_CSV = fopen(NombreArchivo, "r");
-
-    if (apu_archivo_CSV != NULL)
-    {
-        int c;
-
-        while ((c = fgetc(apu_archivo_CSV)) != EOF && i < sizeof(PalabrasNOPUNTERO))
-        {
-            PalabrasNOPUNTERO[i++] = c;
-        }
-        PalabrasNOPUNTERO[i] = '\0';
-        fclose(apu_archivo_CSV);
-    }
-    else
+    if (apu_archivo_CSV == NULL)
     {
         printf("No se pudo abrir el archivo.\n");
+        free(*arreglo);
         return 1;
     }
 
+    int c;
+    while ((c = fgetc(apu_archivo_CSV)) != EOF && i < sizeof(PalabrasNOPUNTERO) - 1)
+    {
+        PalabrasNOPUNTERO[i++] = c;
+    }
+    PalabrasNOPUNTERO[i] = '\0';
+    fclose(apu_archivo_CSV);
+
     i = 0;
     puntero = strtok(PalabrasNOPUNTERO, " .,-\n");
-
     while (puntero != NULL)
     {
-        if (i >= maxPalabras)
 
+        if (i >= maxPalabras)
         {
-            maxPalabras = maxPalabras * 2;
-            arreglo = (char **)realloc(arreglo, maxPalabras * sizeof(char *));
-            if (arreglo == NULL)
+            maxPalabras *= 2;
+            char **nuevoArreglo = (char **)realloc(*arreglo, maxPalabras * sizeof(char *));
+            if (nuevoArreglo == NULL)
             {
-                printf("Error al reasignar memoria para las palabras de Amor.\n");
+                printf("Error al reasignar memoria para las palabras.\n");
+                for (int j = 0; j < i; j++)
+                {
+                    free((*arreglo)[j]);
+                }
+                free(*arreglo);
                 return 1;
             }
+            *arreglo = nuevoArreglo;
         }
-        arreglo[i] = (char *)malloc((strlen(puntero)) * sizeof(char));
-        if (arreglo[i] == NULL)
+
+        (*arreglo)[i] = (char *)malloc((strlen(puntero) + 1) * sizeof(char));
+        if ((*arreglo)[i] == NULL)
         {
-            printf("Error al asignar memoria para la palabra.\n");
+            printf("Error al asignar memoria para una palabra.\n");
+            for (int j = 0; j < i; j++)
+            {
+                free((*arreglo)[j]);
+            }
+            free(*arreglo);
             return 1;
         }
 
-        strcpy(arreglo[i], puntero);
+        strcpy((*arreglo)[i], puntero);
         i++;
         puntero = strtok(NULL, " .,-\n");
     }
+
     for (int j = 0; j < i; j++)
     {
-        printf("%s\n", arreglo[j]);
-        free(arreglo[j]);
+        printf("%s\n", (*arreglo)[j]);
+        free((*arreglo)[j]);
     }
-    free(arreglo);
+    free(*arreglo);
 
     return 0;
 }
@@ -77,7 +85,13 @@ int CargarCSV(char **arreglo, const char *NombreArchivo)
 int main()
 {
     char **arreglo = NULL;
-
-    CargarCSV(arreglo, "amor.csv");
+    if (CargarCSV(&arreglo, "amor.csv") == 0)
+    {
+        printf("Archivo cargado correctamente.\n");
+    }
+    else
+    {
+        printf("Error al cargar el archivo.\n");
+    }
     return 0;
 }
