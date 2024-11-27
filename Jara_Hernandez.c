@@ -1,9 +1,10 @@
+// Autores: Carlos Sebastian Jara Hernandez y Alexis Antonio Mateo Medina
+
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
 
-// Función para limpiar una palabra, eliminando caracteres no deseados
 void limpiar_palabra(char *palabra)
 {
     int i = 0, j = 0;
@@ -18,16 +19,14 @@ void limpiar_palabra(char *palabra)
     palabra[j] = '\0';
 }
 
-// Convierte una cadena a minúsculas
 void minusculas(char *cadena)
 {
     for (int i = 0; cadena[i] != '\0'; i++)
     {
-        cadena[i] = tolower((unsigned char)cadena[i]);
+        cadena[i] = tolower(cadena[i]);
     }
 }
 
-// Carga palabras desde un archivo CSV en un arreglo dinámico
 int CargarCSV(char ***arreglo, const char *NombreArchivo)
 {
     FILE *apu_archivo_CSV;
@@ -78,7 +77,7 @@ int CargarCSV(char ***arreglo, const char *NombreArchivo)
             *arreglo = nuevoArreglo;
         }
 
-        (*arreglo)[i] = (char *)malloc((strlen(puntero) + 1) * sizeof(char));
+        (*arreglo)[i] = (char *)malloc((strlen(puntero)) * sizeof(char));
         if ((*arreglo)[i] == NULL)
         {
             printf("Error al asignar memoria para una palabra.\n");
@@ -95,7 +94,7 @@ int CargarCSV(char ***arreglo, const char *NombreArchivo)
         puntero = strtok(NULL, " .,-\n");
     }
 
-    return i; // Retorna la cantidad de palabras cargadas
+    return i;
 }
 
 int main()
@@ -167,7 +166,7 @@ int main()
     int tamano_felicidad = CargarCSV(&felicidad, "felicidad.csv");
 
     int puntosAmor = 0, puntosAsco = 0, puntosTristeza = 0, puntosAmistad = 0, puntosFelicidad = 0;
-    int negacion = 0, rango_negacion = 5;
+    int negacion = 0;
 
     for (j = 0; j < i; j++)
     {
@@ -181,7 +180,7 @@ int main()
         {
             int negada = 0;
 
-            for (int k = 1; k <= rango_negacion && j + k < i; k++)
+            for (int k = 1; k <= 5 && j + k < i; k++)
             {
                 for (int l = 0; l < tamano_amor; l++)
                 {
